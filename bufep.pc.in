@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: BUFEP
+Description: Implementation of the Basic UDP File Exchange Protocol.
+URL: https://github.com/KokoseiJ/BUFEP/tree/master/specs
+Version: @VERSION@
+Requires:
+Conflicts:
+Libs: -L${libdir} -lbufep
+Cflags: -I${includedir}/bufep
