@@ -5,8 +5,14 @@ include(GNUInstallDirs)
 
 set(CMAKE_C_STANDARD 99)
 option(BUFEP_INSTALL_PKGCONFIG "install pkg-config module." ON)
+option(BUFEP_ENABLE_DEBUG "enable bufep debug functions." OFF)
 
-add_library(bufep SHARED src/bufep.c src/bufep_pmtud.c include/bufep_pmtud.h src/bufep_socket.c include/bufep_socket.h test/test_01.c src/bufep_private.h src/bufep_debug.c src/bufep_debug.h)
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+  set(BUFEP_ENABLE_DEBUG ON)
+endif()
+
+add_library(bufep SHARED src/bufep.c src/bufep_pmtud.c include/bufep_pmtud.h src/bufep_socket.c include/bufep_socket.h test/test_socket_server.c src/bufep_private.h src/bufep_debug.c include/bufep_debug.h src/bufep_fletcher.c include/bufep_fletcher.h)
+configure_file(${PROJECT_SOURCE_DIR}/include/bufep_config.h.in ${PROJECT_SOURCE_DIR}/include/bufep_config.h)
 FILE(GLOB BUFEP_PUBLIC_HEADER "include/*.h")
 
 set_target_properties(bufep
