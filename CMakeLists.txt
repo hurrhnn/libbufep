@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 project(libbufep VERSION 0.0.1 LANGUAGES C)
 
 include(GNUInstallDirs)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(CMAKE_C_STANDARD 99)
 option(BUFEP_INSTALL_PKGCONFIG "install pkg-config module." ON)
@@ -45,6 +46,16 @@ if(BUFEP_INSTALL_PKGCONFIG)
     configure_file(bufep.pc.in bufep.pc)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/bufep.pc
             DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig)
+endif()
+
+if(NOT TARGET uninstall)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+  add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake)
 endif()
 
 if(NOT BUFEP_DISABLE_TESTS)
