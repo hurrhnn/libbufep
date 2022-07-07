@@ -1,3 +1,6 @@
 # Project exclude paths
 build/
 .idea
+
+# CMake configure header file
+include/bufep_config.h.in
