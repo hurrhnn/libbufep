@@ -1,7 +1,7 @@
 // A simple Path MTU Discovery implementation of UDP sockets.
 
 #include <sys/errno.h>
-#include "bufep.h"
+#include <bufep.h>
 
 int main(int argc, char **argv) {
     if(argc < 3)
