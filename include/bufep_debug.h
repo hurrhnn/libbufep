@@ -41,7 +41,7 @@ enum bufep_debug_colors {
 #define BUFEP_DEBUG(CLR, fmt, ...) \
     printf("%s" fmt "%s", (BUFEP_DEBUG_COLOR(CLR)), ##__VA_ARGS__, STR_RST)
 #define BUFEP_DEBUG_MORE(CLR, fmt, ...) \
-    printf("%s [%s:%02d]: %s() - " fmt "%s", (BUFEP_DEBUG_COLOR(CLR)), __FILENAME__, __LINE__, __func__, ##__VA_ARGS__, STR_RST)
+    printf("%s[%s:%02d]: %s() - " fmt "%s", (BUFEP_DEBUG_COLOR(CLR)), __FILENAME__, __LINE__, __func__, ##__VA_ARGS__, STR_RST)
 #else
 #define BUFEP_DEBUG(CLR, fmt, ...) do {} while (0)
 #define BUFEP_DEBUG_MORE(CLR, fmt, ...) do {} while (0)
