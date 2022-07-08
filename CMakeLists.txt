@@ -5,20 +5,27 @@ include(GNUInstallDirs)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 if(LINUX)
-  find_package(LibUUID REQUIRED)
+    find_package(LibUUID REQUIRED)
 endif()
 
 set(CMAKE_C_STANDARD 99)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 option(BUFEP_INSTALL_PKGCONFIG "install pkg-config module." ON)
 option(BUFEP_ENABLE_DEBUG "enable bufep debug functions." OFF)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-  set(BUFEP_ENABLE_DEBUG ON)
+    set(BUFEP_ENABLE_DEBUG ON)
 endif()
 
-add_library(bufep SHARED src/bufep.c src/bufep_pmtud.c include/bufep_pmtud.h src/bufep_socket.c include/bufep_socket.h test/test_socket_server.c src/bufep_private.h src/bufep_debug.c include/bufep_debug.h src/bufep_fletcher.c include/bufep_fletcher.h src/bufep_uuidwrapper.c include/bufep_uuidwrapper.h)
 configure_file(${PROJECT_SOURCE_DIR}/include/bufep_config.h.in ${PROJECT_SOURCE_DIR}/include/bufep_config.h)
 FILE(GLOB BUFEP_PUBLIC_HEADER "include/*.h")
+
+add_library(bufep SHARED src/bufep.c src/bufep_pmtud.c include/bufep_pmtud.h src/bufep_socket.c include/bufep_socket.h test/test_socket_server.c src/bufep_private.h src/bufep_debug.c include/bufep_debug.h src/bufep_fletcher.c include/bufep_fletcher.h src/bufep_uuidwrapper.c include/bufep_uuidwrapper.h)
+if (WIN32 OR MSVC)
+    target_link_libraries(bufep wsock32 ws2_32)
+elseif(LINUX)
+    target_link_libraries(bufep LibUUID)
+endif()
 
 set_target_properties(bufep
         PROPERTIES SOVERSION
@@ -53,16 +60,23 @@ if(BUFEP_INSTALL_PKGCONFIG)
 endif()
 
 if(NOT TARGET uninstall)
-  configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
+    configure_file(
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake"
+            IMMEDIATE @ONLY)
 
-  add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake)
+    add_custom_target(uninstall
+            COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake)
 endif()
 
-if(NOT BUFEP_DISABLE_TESTS)
+if (NOT BUFEP_DISABLE_TESTS)
     enable_testing()
+    if (MSVC)
+        add_custom_command(TARGET bufep
+                POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:bufep> "${CMAKE_CURRENT_BINARY_DIR}/test/"
+                COMMENT "Copy dll file to ${CMAKE_CURRENT_BINARY_DIR} directory" VERBATIM
+                )
+    endif()
     add_subdirectory(test)
 endif()
