@@ -3,6 +3,8 @@
 
 #if defined(WIN32) || defined(_WIN32) || defined(_WIN64) || defined(__WIN32) && !defined(__CYGWIN__)
 #define BUFEP_MS_WINDOWS
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
 #elif __APPLE__ || __MACH__
 #define BUFEP_MAC_OS_X
 #elif __linux__
@@ -13,10 +15,20 @@
 #define BUFEP_UNIX
 #endif
 
-#ifdef MS_WINDOWS
+#ifdef BUFEP_MS_WINDOWS
 #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 #else
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#endif
+
+#ifdef BUFEP_MS_WINDOWS
+#include <winerror.h>
+#define BUFEP_SUCCESS S_OK
+#define BUFEP_FAILURE S_FALSE
+#else
+#include <errno.h>
+#define BUFEP_SUCCESS EXIT_SUCCESS
+#define BUFEP_FAILURE EXIT_FAILURE
 #endif
 
 #cmakedefine01 BUFEP_ENABLE_DEBUG

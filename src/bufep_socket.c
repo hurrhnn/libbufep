@@ -1,5 +1,4 @@
 #include "bufep_socket.h"
-#include "bufep_private.h"
 
 int bufep_init_socket(char *address, int port, struct sockaddr_in *p_server_addr) {
     char resolved_address[0xF];
