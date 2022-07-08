@@ -5,6 +5,7 @@
 #include "bufep_fletcher.h"
 #include "bufep_socket.h"
 #include "bufep_pmtud.h"
+#include "bufep_uuidwrapper.h"
 
 #include <stdio.h>
 
