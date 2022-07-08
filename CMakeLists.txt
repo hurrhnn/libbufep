@@ -4,6 +4,10 @@ project(libbufep VERSION 0.0.1 LANGUAGES C)
 include(GNUInstallDirs)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+if(LINUX)
+  find_package(LibUUID REQUIRED)
+endif()
+
 set(CMAKE_C_STANDARD 99)
 option(BUFEP_INSTALL_PKGCONFIG "install pkg-config module." ON)
 option(BUFEP_ENABLE_DEBUG "enable bufep debug functions." OFF)
@@ -12,7 +16,7 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
   set(BUFEP_ENABLE_DEBUG ON)
 endif()
 
-add_library(bufep SHARED src/bufep.c src/bufep_pmtud.c include/bufep_pmtud.h src/bufep_socket.c include/bufep_socket.h test/test_socket_server.c src/bufep_private.h src/bufep_debug.c include/bufep_debug.h src/bufep_fletcher.c include/bufep_fletcher.h)
+add_library(bufep SHARED src/bufep.c src/bufep_pmtud.c include/bufep_pmtud.h src/bufep_socket.c include/bufep_socket.h test/test_socket_server.c src/bufep_private.h src/bufep_debug.c include/bufep_debug.h src/bufep_fletcher.c include/bufep_fletcher.h src/bufep_uuidwrapper.c include/bufep_uuidwrapper.h)
 configure_file(${PROJECT_SOURCE_DIR}/include/bufep_config.h.in ${PROJECT_SOURCE_DIR}/include/bufep_config.h)
 FILE(GLOB BUFEP_PUBLIC_HEADER "include/*.h")
 
