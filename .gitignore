@@ -31,7 +31,9 @@ Temporary Items
 
 # Project exclude paths
 build/
+out/
 .idea
+.vs
 
 # CMake generated configure file
 include/bufep_config.h
