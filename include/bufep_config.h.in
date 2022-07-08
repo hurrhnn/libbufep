@@ -1,6 +1,24 @@
 #ifndef LIBBUFEP_BUFEP_CONFIG_H
 #define LIBBUFEP_BUFEP_CONFIG_H
 
+#if defined(WIN32) || defined(_WIN32) || defined(_WIN64) || defined(__WIN32) && !defined(__CYGWIN__)
+#define BUFEP_MS_WINDOWS
+#elif __APPLE__ || __MACH__
+#define BUFEP_MAC_OS_X
+#elif __linux__
+#define BUFEP_LINUX
+#elif __FreeBSD__
+#define BUFEP_FREEBSD
+#elif __unix || __unix__
+#define BUFEP_UNIX
+#endif
+
+#ifdef MS_WINDOWS
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#else
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#endif
+
 #cmakedefine01 BUFEP_ENABLE_DEBUG
 
 #endif //LIBBUFEP_BUFEP_CONFIG_H
