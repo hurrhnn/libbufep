@@ -3,6 +3,12 @@
 
 #include "bufep_config.h"
 
+#ifdef BUFEP_MS_WINDOWS
+#include <WS2tcpip.h>
+#include <Windows.h>
+#include <stdbool.h>
+#endif
+
 enum bufep_debug_colors {
     RED = 0,
     GRN,
