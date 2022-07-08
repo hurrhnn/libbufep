@@ -33,12 +33,16 @@ enum bufep_debug_colors {
 
 #if BUFEP_ENABLE_DEBUG
 #define BUFEP_DEBUG(CLR, fmt, ...) \
+    bufep_debug_init_console(); \
     printf("%s" fmt "%s", (BUFEP_DEBUG_COLOR(CLR)), ##__VA_ARGS__, STR_RST)
 #define BUFEP_DEBUG_MORE(CLR, fmt, ...) \
+    bufep_debug_init_console(); \
     printf("%s[%s:%02d]: %s() - " fmt "%s", (BUFEP_DEBUG_COLOR(CLR)), __FILENAME__, __LINE__, __func__, ##__VA_ARGS__, STR_RST)
 #else
 #define BUFEP_DEBUG(CLR, fmt, ...) do {} while (0)
 #define BUFEP_DEBUG_MORE(CLR, fmt, ...) do {} while (0)
 #endif
+
+void bufep_debug_init_console(void);
 
 #endif //LIBBUFEP_BUFEP_DEBUG_H
