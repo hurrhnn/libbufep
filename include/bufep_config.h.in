@@ -24,11 +24,11 @@ typedef SSIZE_T ssize_t;
 #ifdef BUFEP_MS_WINDOWS
 #include <winerror.h>
 #define BUFEP_SUCCESS S_OK
-#define BUFEP_FAILURE S_FALSE
+#define BUFEP_FAILURE (-1)
 #else
 #include <errno.h>
 #define BUFEP_SUCCESS EXIT_SUCCESS
-#define BUFEP_FAILURE EXIT_FAILURE
+#define BUFEP_FAILURE (-1)
 #endif
 
 #cmakedefine01 BUFEP_ENABLE_DEBUG
