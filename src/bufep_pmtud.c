@@ -1,4 +1,5 @@
 #include "bufep_pmtud.h"
+#include "bufep_debug.h"
 #include "bufep_private.h"
 
 int bufep_pmtud(bufep_socket_info_t *server_info) {
@@ -22,17 +23,39 @@ int bufep_pmtud(bufep_socket_info_t *server_info) {
 
         if (sendto(server_info->sock_fd, buffer, mtu_current - IPV4_HEADER_SIZE - UDP_HEADER_SIZE, 0,
                    (struct sockaddr *) &server_addr, *server_info->socklen) == -1) {
-            if (errno == EMSGSIZE) {
+            if (
+#ifdef BUFEP_MS_WINDOWS
+                WSAGetLastError() == WSAEMSGSIZE
+#else
+                errno == EMSGSIZE
+#endif
+                ) {
                 printf(" packet too big for local interface.\n");
                 mtu_high_bound = mtu_current - 1;
                 continue;
             }
+#ifdef BUFEP_MS_WINDOWS
+            wchar_t* wError = NULL;
+            FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                NULL, WSAGetLastError(),
+                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                (LPWSTR)&wError, 0, NULL);
+            BUFEP_ERROR(" %S\n", wError);
+            LocalFree(wError);
+#else
             perror("Error in sendto()");
+#endif
             return BUFEP_FAILURE;
         }
 
         if (recvfrom(server_info->sock_fd, buffer, MAXIMUM_MTU, 0, (struct sockaddr *) &server_addr, &from_size) < 0) {
-            if (errno == EAGAIN || errno == EWOULDBLOCK)
+            if (
+#ifdef BUFEP_MS_WINDOWS
+                WSAGetLastError() == WSAEWOULDBLOCK
+#else
+                errno == EAGAIN || errno == EWOULDBLOCK
+#endif
+                )
             {
                 if (--current_tries == 0)
                 {
@@ -42,7 +65,18 @@ int bufep_pmtud(bufep_socket_info_t *server_info) {
                 }
                 continue;
             }
-            perror("Error in recvfrom()");
+#ifdef BUFEP_MS_WINDOWS
+            printf("%d", WSAGetLastError());
+            wchar_t* wError = NULL;
+            FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                NULL, WSAGetLastError(),
+                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                (LPWSTR)&wError, 0, NULL);
+            BUFEP_ERROR(" %S\n", wError);
+            LocalFree(wError);
+#else
+            perror("Error in sendto()");
+#endif
             return BUFEP_FAILURE;
         }
         printf(" valid.\n");

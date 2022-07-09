@@ -34,7 +34,13 @@ int main(int argc, char **argv) {
         socklen_t socklen = sizeof(client_addr);
         ssize_t n;
 
-        n = recvfrom(sock_fd, (char *) buffer, 65536, MSG_WAITALL, (struct sockaddr *) &client_addr, &socklen);
+        n = recvfrom(sock_fd, (char*)buffer, 65536,
+#ifdef BUFEP_MS_WINDOWS
+            NULL,
+#else
+            MSG_WAITALL,
+#endif
+            (struct sockaddr *) &client_addr, &socklen);
         n += 0x1c;
 
         sprintf(buffer, "Received %zd bytes from %s:%d", n, inet_ntoa(client_addr.sin_addr),
