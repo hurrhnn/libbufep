@@ -6,13 +6,13 @@ int main(int argc, char **argv) {
     if(argc < 3)
     {
         printf("Usage: %s [Address] [Port]\n", argv[0]);
-        return BUFEP_SUCCESS;
+        return EXIT_SUCCESS;
     }
 
     if(strtol(argv[2], NULL, 10) == EINVAL)
     {
         perror("Invalid Port number");
-        return BUFEP_FAILURE;
+        return EXIT_FAILURE;
     }
 
     bufep_hello();
