@@ -51,7 +51,7 @@ int bufep_pmtud(bufep_socket_info_t *server_info) {
         if (recvfrom(server_info->sock_fd, buffer, MAXIMUM_MTU, 0, (struct sockaddr *) &server_addr, &from_size) < 0) {
             if (
 #ifdef BUFEP_MS_WINDOWS
-                WSAGetLastError() == WSAEWOULDBLOCK
+                WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAETIMEDOUT
 #else
                 errno == EAGAIN || errno == EWOULDBLOCK
 #endif
