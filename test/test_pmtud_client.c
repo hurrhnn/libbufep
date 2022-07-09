@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
 
     bufep_socket_info_t server_info;
     struct sockaddr_in server_addr;
-    server_info.sock_fd = bufep_init_socket(address, port, &server_addr);
+    server_info.sock_fd = bufep_socket_init_client(address, port, &server_addr);
 
     int server_socklen = sizeof(server_addr);
     server_info.socklen = &server_socklen;
