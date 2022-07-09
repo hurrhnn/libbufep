@@ -1,6 +1,30 @@
 #include "bufep_socket.h"
 
+#ifdef BUFEP_MS_WINDOWS
+static bool bufep_is_winsock_initiated = false;
+
+int bufep_socket_init_winsock() {
+    if (!bufep_is_winsock_initiated) {
+        bufep_is_winsock_initiated = true;
+
+        int iResult;
+        WSADATA wsaData;
+
+        // Initialize Winsock
+        if ((iResult = WSAStartup(MAKEWORD(2,2), &wsaData)) != 0) {
+            printf("WSAStartup failed: %d\n", iResult);
+            return BUFEP_FAILURE;
+        }
+    }
+    return BUFEP_SUCCESS;
+}
+#endif
+
 int bufep_init_socket(char *address, int port, struct sockaddr_in *p_server_addr) {
+#ifdef BUFEP_MS_WINDOWS
+    if(bufep_socket_init_winsock() == BUFEP_FAILURE)
+        return BUFEP_FAILURE;
+#endif
     char resolved_address[0xF];
 
     int sock_fd, val, timeout_limit = 1000;

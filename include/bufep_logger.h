@@ -3,6 +3,12 @@
 
 #include "bufep_config.h"
 
+#ifdef BUFEP_MS_WINDOWS
+#include <WS2tcpip.h>
+#include <Windows.h>
+#include <stdbool.h>
+#endif
+
 #define STR_RST   "\x1B[0m"
 #define STR_RED   "\x1B[31m"
 #define STR_GRN   "\x1B[32m"

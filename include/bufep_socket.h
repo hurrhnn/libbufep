@@ -9,6 +9,7 @@
 #include <stdint.h>
 
 #ifdef BUFEP_MS_WINDOWS
+#include <stdbool.h>
 #include <Ws2tcpip.h>
 #else
 #include <netdb.h>
@@ -22,6 +23,10 @@ typedef struct bufep_socket_info {
     struct sockaddr_in *sockaddr_in;
     int *socklen;
 } bufep_socket_info_t;
+
+#ifdef BUFEP_MS_WINDOWS
+int bufep_socket_init_winsock();
+#endif
 
 int bufep_init_socket(char *address, int port, struct sockaddr_in *p_server_addr);
 
