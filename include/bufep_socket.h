@@ -28,6 +28,7 @@ typedef struct bufep_socket_info {
 int bufep_socket_init_winsock();
 #endif
 
-int bufep_init_socket(char *address, int port, struct sockaddr_in *p_server_addr);
+int bufep_socket_init_client(char *address, int port, struct sockaddr_in *p_server_addr);
+int bufep_socket_init_server(int port, struct sockaddr_in *p_server_addr);
 
 #endif //LIBBUFEP_BUFEP_SOCKET_H

@@ -20,7 +20,7 @@ int bufep_socket_init_winsock() {
 }
 #endif
 
-int bufep_init_socket(char *address, int port, struct sockaddr_in *p_server_addr) {
+int bufep_socket_init_client(char *address, int port, struct sockaddr_in *p_server_addr) {
 #ifdef BUFEP_MS_WINDOWS
     if(bufep_socket_init_winsock() == BUFEP_FAILURE)
         return BUFEP_FAILURE;
@@ -77,5 +77,27 @@ int bufep_init_socket(char *address, int port, struct sockaddr_in *p_server_addr
         return BUFEP_FAILURE;
     }
 
+    return sock_fd;
+}
+
+int bufep_socket_init_server(int port, struct sockaddr_in *p_server_addr) {
+    int sock_fd;
+
+    if ( (sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+        perror("socket creation failed");
+        return EXIT_FAILURE;
+    }
+
+    memset(p_server_addr, 0, sizeof(*p_server_addr));
+
+    p_server_addr->sin_family = AF_INET; // IPv4
+    p_server_addr->sin_addr.s_addr = INADDR_ANY;
+    p_server_addr->sin_port = port;
+
+    if (bind(sock_fd, (const struct sockaddr *)p_server_addr, sizeof(*p_server_addr)) < 0 )
+    {
+        perror("bind failed");
+        return BUFEP_FAILURE;
+    }
     return sock_fd;
 }
