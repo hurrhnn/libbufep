@@ -6,9 +6,14 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-set(LINUX ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 option(BUFEP_INSTALL_PKGCONFIG "install pkg-config module." ON)
 option(BUFEP_ENABLE_DEBUG "enable bufep debug functions." OFF)
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(LINUX ON)
+else()
+    set(LINUX OFF)
+endif()
 
 if(LINUX)
     find_package(LibUUID REQUIRED)
