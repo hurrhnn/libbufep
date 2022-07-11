@@ -1,7 +1,7 @@
-#include "bufep_fletcher.h"
+#include "bufep_fletcher32.h"
 
 /* copy-pasted from wikipedia */
-uint32_t bufep_fletcher32(const uint16_t *data, size_t len) {
+bufep_fletcher_checksum_t bufep_fletcher32(const bufep_fletcher_data_t *data, size_t len) {
     uint32_t c0, c1;
     len = (len + 1) & ~1;      /* Round up len to words */
 
