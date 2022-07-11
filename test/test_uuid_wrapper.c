@@ -7,12 +7,12 @@ int main() {
 
     bufep_uuid_generate(test_uuid);
     is_uuid_null = bufep_uuid_is_null(test_uuid);
-    printf("UUID Created: %s", is_uuid_null ? "False - FAIL" : "True - PASS");
+    printf("UUID Created: %s", is_uuid_null ? "False - FAIL\n" : "True - PASS\n");
     if(is_uuid_null)
         return EXIT_FAILURE;
 
     bufep_uuid_unparse_lower(test_uuid, test_uuid_str);
-    printf("\n\nUUID: %s\n", test_uuid_str);
+    printf("\nUUID: %s\n", test_uuid_str);
 
     bufep_uuid_unparse_upper(test_uuid, test_uuid_str);
     printf("Capitalized-UUID: %s\n", test_uuid_str);
