@@ -34,7 +34,11 @@ int bufep_socket_init_client(char *address, int port, struct sockaddr_in *p_serv
     struct timeval timeout = { timeout_limit / 1000, (timeout_limit % 1000) * 1000 };
 #endif
 
-    if ((sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+    if ((sock_fd =
+#ifdef BUFEP_MS_WINDOWS
+        (int)
+ #endif
+        socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
         perror("Error in socket creation");
         return BUFEP_FAILURE;
     }
@@ -55,7 +59,11 @@ int bufep_socket_init_client(char *address, int port, struct sockaddr_in *p_serv
 
 #ifdef IP_MTU_DISCOVER
     val = IP_PMTUDISC_DO;
-    if (setsockopt(sock_fd, IPPROTO_IP, IP_MTU_DISCOVER, &val, sizeof(val)) != 0)
+    if (setsockopt(sock_fd, IPPROTO_IP, IP_MTU_DISCOVER,
+#ifdef BUFEP_MS_WINDOWS
+        (const char *)
+#endif
+        &val, sizeof(val)) != 0)
     {
         perror("Error in setsockopt(IP_MTU_DISCOVER)");
         return BUFEP_FAILURE;
@@ -99,7 +107,11 @@ int bufep_socket_init_server(int port, struct sockaddr_in *p_server_addr) {
 #endif
     int sock_fd;
 
-    if ( (sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+    if ( (sock_fd =
+#ifdef BUFEP_MS_WINDOWS
+    (int)
+#endif
+        socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
         perror("socket creation failed");
         return EXIT_FAILURE;
     }

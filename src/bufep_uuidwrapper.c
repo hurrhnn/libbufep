@@ -63,14 +63,14 @@ int bufep_uuid_is_null(bufep_uuid_t uuid) {
 int bufep_uuid_parse(const bufep_uuid_string_t str_uuid, bufep_uuid_t uuid) {
     UUID uuid_t;
     bufep_uuid_convert(1, &uuid_t, uuid);
-    return UuidFromStringA(str_uuid, &uuid_t);
+    return UuidFromStringA((char *) str_uuid, &uuid_t);
 }
 
 void bufep_uuid_unparse_lower(const bufep_uuid_t uuid, bufep_uuid_string_t str_uuid) {
     int code;
     UUID uuid_t;
     RPC_CSTR uuid_string_t;
-    bufep_uuid_convert(1, &uuid_t, uuid);
+    bufep_uuid_convert(1, &uuid_t, (unsigned char *) uuid);
     code = UuidToStringA(&uuid_t, &uuid_string_t);
 
     if(code == RPC_S_OK)
@@ -83,7 +83,7 @@ void bufep_uuid_unparse_upper(const bufep_uuid_t uuid, bufep_uuid_string_t str_u
     int code;
     UUID uuid_t;
     RPC_CSTR uuid_string_t;
-    bufep_uuid_convert(1, &uuid_t, uuid);
+    bufep_uuid_convert(1, &uuid_t, (unsigned char *) uuid);
     code = UuidToStringA(&uuid_t, &uuid_string_t);
 
     if (code == RPC_S_OK) {

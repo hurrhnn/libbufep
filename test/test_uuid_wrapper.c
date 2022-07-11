@@ -42,5 +42,4 @@ int main() {
     }
 
     printf("\n== ALL of UUID TEST VECTORS ARE SUCCESSFULLY PASSED ==");
-    BUFEP_WARN();
 }

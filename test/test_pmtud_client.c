@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 
     bufep_hello();
     char *address = argv[1];
-    uint16_t port = strtol(argv[2], NULL, 10);
+    uint16_t port = (uint16_t) strtol(argv[2], NULL, 10);
 
     bufep_socket_info_t server_info;
     struct sockaddr_in server_addr;

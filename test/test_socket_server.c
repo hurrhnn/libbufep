@@ -22,9 +22,11 @@ int main(int argc, char **argv) {
     struct sockaddr_in server_addr, client_addr;
     memset(&client_addr, 0, sizeof(client_addr));
 
-    if ((sock_fd = bufep_socket_init_server(
-            htons(strtol(argv[1], NULL, 10)),
-            &server_addr)) < 0) {
+    if ((sock_fd = bufep_socket_init_server(htons(
+#ifdef BUFEP_MS_WINDOWS
+    (u_short)
+#endif
+        strtol(argv[1], NULL, 10)), &server_addr)) < 0) {
         perror("socket creation failed");
         return EXIT_FAILURE;
     }
@@ -36,7 +38,7 @@ int main(int argc, char **argv) {
 
         n = recvfrom(sock_fd, (char*)buffer, 65536,
 #ifdef BUFEP_MS_WINDOWS
-            NULL,
+            0,
 #else
             MSG_WAITALL,
 #endif
@@ -46,6 +48,6 @@ int main(int argc, char **argv) {
         sprintf(buffer, "Received %zd bytes from %s:%d", n, inet_ntoa(client_addr.sin_addr),
                 ntohs(client_addr.sin_port));
         printf("[*] %s\n", buffer);
-        sendto(sock_fd, (const char *) buffer, strlen(buffer), 0, (const struct sockaddr *) &client_addr, socklen);
+        sendto(sock_fd, (const char *) buffer, (int) strlen(buffer), 0, (const struct sockaddr *) &client_addr, socklen);
     }
 }

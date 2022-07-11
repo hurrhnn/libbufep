@@ -23,6 +23,8 @@ typedef SSIZE_T ssize_t;
 
 #ifdef BUFEP_MS_WINDOWS
 #include <winerror.h>
+#define _CRT_SECURE_NO_WARNINGS
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define BUFEP_SUCCESS S_OK
 #define BUFEP_FAILURE (-1)
 #else
