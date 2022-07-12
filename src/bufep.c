@@ -6,23 +6,23 @@ void bufep_hello() {
 
 int bufep_parse_header(unsigned char *raw, size_t raw_len, bufep_header_t *bufep_header) {
     if (raw_len < BUFEP_HEADER_LENGTH) {
-        BUFEP_DEBUG_MORE(RED, "Header length mismatch!");
+        BUFEP_DEBUG_MORE(RED, "Header length mismatch!\n");
         return BUFEP_FAILURE;
     }
 
     memcpy(bufep_header, raw, BUFEP_HEADER_LENGTH);
     if (bufep_header->magic_header != BUFEP_MAGIC_HEADER) {
-        BUFEP_DEBUG_MORE(RED, "Magic header mismatch!");
+        BUFEP_DEBUG_MORE(RED, "Magic header mismatch!\n");
         return BUFEP_FAILURE;
     }
 
     if (bufep_header->protocol_version != BUFEP_PROTOCOL_VERSION) {
-        BUFEP_DEBUG_MORE(RED, "Protocol version mismatch!");
+        BUFEP_DEBUG_MORE(RED, "Protocol version mismatch!\n");
         return BUFEP_FAILURE;
     }
 
     if (bufep_uuid_is_null(bufep_header->client_identifier)) {
-        BUFEP_DEBUG_MORE(RED, "Client Identifier is empty!");
+        BUFEP_DEBUG_MORE(RED, "Client Identifier is empty!\n");
         return BUFEP_FAILURE;
     }
 
@@ -46,7 +46,7 @@ if (fletcher_data == NULL)
 
     if (bufep_fletcher((bufep_fletcher_data_t *) fletcher_data, fletcher_data_length, BUFEP_FLETCHER_BIT) !=
         bufep_header->fletcher_32) {
-        BUFEP_DEBUG_MORE(RED, "Fletcher checksum mismatch!");
+        BUFEP_DEBUG_MORE(RED, "Fletcher checksum mismatch!\n");
         return BUFEP_FAILURE;
     }
 
