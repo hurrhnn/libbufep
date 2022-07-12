@@ -2,7 +2,7 @@
 #define LIBBUFEP_BUFEP_H
 
 #include "bufep_debug.h"
-#include "bufep_fletcher32.h"
+#include "bufep_fletcher.h"
 #include "bufep_socket.h"
 #include "bufep_pmtud.h"
 #include "bufep_logger.h"
@@ -13,6 +13,8 @@
 #define BUFEP_HEADER_LENGTH    0x1B
 #define BUFEP_MAGIC_HEADER     0x700311
 #define BUFEP_PROTOCOL_VERSION 0x0
+
+#define BUFEP_HEADER_LENGTH_EXCLUDE_FLETCHER (0x1B - 0x04)
 
 #ifdef BUFEP_MS_WINDOWS
 #pragma pack(push, 1)
