@@ -51,8 +51,7 @@ if (fletcher_data == NULL)
     }
 
 #ifdef BUFEP_MS_WINDOWS
-    HeapFree(GetProcessHeap(), 0, fletcher_data);
-    HeapFree(GetProcessHeap(), 0, fletcher_block);
+    HeapFree(GetProcessHeap(), 0, (LPVOID) fletcher_data);
 #endif
     return BUFEP_SUCCESS;
 }

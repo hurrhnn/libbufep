@@ -5,7 +5,7 @@ bufep_fletcher_checksum_t bufep_fletcher(const bufep_fletcher_data_t *data, size
     const uint32_t mask = (1 << (bit / 2)) - 1;
 
     uint32_t sum1 = 0, sum2 = 0;
-    const uint32_t max = len / chunk_size;
+    const uint32_t max = (uint32_t)(len / chunk_size);
     for (uint32_t i = 0; i < max; i++)
     {
         sum1 = (sum1 + data[i]) % mask;
