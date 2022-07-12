@@ -12,7 +12,7 @@ int bufep_parse_header(unsigned char *raw, size_t raw_len, bufep_header_t *bufep
 
     memcpy(bufep_header, raw, BUFEP_HEADER_LENGTH);
     if (bufep_header->magic_header != BUFEP_MAGIC_HEADER) {
-        BUFEP_DEBUG_MORE(RED, "Magic haeader mismatch!");
+        BUFEP_DEBUG_MORE(RED, "Magic header mismatch!");
         return BUFEP_FAILURE;
     }
 
@@ -26,25 +26,33 @@ int bufep_parse_header(unsigned char *raw, size_t raw_len, bufep_header_t *bufep
         return BUFEP_FAILURE;
     }
 
-    const size_t fletcher_data_length = (BUFEP_HEADER_LENGTH_EXCLUDE_FLETCHER +
-                                         bufep_header->data_size);
-    const size_t fletcher_block_length = (fletcher_data_length % sizeof(uint16_t) == 0 ? fletcher_data_length /
-                                                                                         sizeof(uint16_t) :
-                                          (fletcher_data_length / sizeof(uint16_t)) + 1);
-    const unsigned char fletcher_data[fletcher_block_length];
-    memcpy((unsigned char *)fletcher_data, bufep_header, BUFEP_HEADER_LENGTH_EXCLUDE_FLETCHER);
-    memcpy((unsigned char *)(fletcher_data + BUFEP_HEADER_LENGTH_EXCLUDE_FLETCHER), bufep_header->payloads, bufep_header->data_size);
+    bufep_header->payloads = raw + BUFEP_HEADER_LENGTH;
 
-    bufep_fletcher_data_t fletcher_block[fletcher_block_length];
+    const size_t fletcher_data_length = ((BUFEP_FLETCHER_LENGTH(bufep_header->data_size) % 2) ?
+                                         BUFEP_FLETCHER_LENGTH(bufep_header->data_size) + 0x1 :
+                                         (BUFEP_FLETCHER_LENGTH(bufep_header->data_size)));
+    const unsigned char
+#ifdef BUFEP_MS_WINDOWS
+    *fletcher_data = HeapAlloc(GetProcessHeap(), 0, fletcher_data_length);
+if (fletcher_data == NULL)
+    return BUFEP_FAILURE;
+#else
+            fletcher_data[fletcher_data_length];
+#endif
+    memset((unsigned char *) fletcher_data, 0x0, fletcher_data_length);
+    memcpy((unsigned char *) fletcher_data, raw + 0x04, BUFEP_HEADER_LENGTH_EXCLUDE_FLETCHER - 0x04);
+    memcpy((unsigned char *) (fletcher_data + BUFEP_HEADER_LENGTH_EXCLUDE_FLETCHER - 0x04), bufep_header->payloads,
+           bufep_header->data_size);
 
-    memset(&fletcher_block[fletcher_block_length - 1], 0x0, sizeof(uint16_t));
-    for (int i = 0; i < fletcher_block_length; i++)
-        memcpy(&fletcher_block[i], bufep_header->payloads + (i * sizeof(uint16_t)), sizeof(uint16_t));
-
-    if(bufep_fletcher((bufep_fletcher_data_t *) fletcher_data, fletcher_data_length, BUFEP_FLETCHER_BIT) != bufep_header->fletcher_32) {
+    if (bufep_fletcher((bufep_fletcher_data_t *) fletcher_data, fletcher_data_length, BUFEP_FLETCHER_BIT) !=
+        bufep_header->fletcher_32) {
         BUFEP_DEBUG_MORE(RED, "Fletcher checksum mismatch!");
         return BUFEP_FAILURE;
     }
 
+#ifdef BUFEP_MS_WINDOWS
+    HeapFree(GetProcessHeap(), 0, fletcher_data);
+    HeapFree(GetProcessHeap(), 0, fletcher_block);
+#endif
     return BUFEP_SUCCESS;
 }
