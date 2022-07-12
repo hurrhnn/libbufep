@@ -34,7 +34,8 @@
     defined(__ARMEL__) || \
     defined(__THUMBEL__) || \
     defined(__AARCH64EL__) || \
-    defined(_MIPSEL) || defined(__MIPSEL) || defined(__MIPSEL__)
+    defined(_MIPSEL) || defined(__MIPSEL) || defined(__MIPSEL__) || \
+    defined(BUFEP_MS_WINDOWS)
 #define BUFEP_SYSTEM_IS_LITTLE_ENDIAN
 #else
 #error "Couldn't decide the system endianness."
