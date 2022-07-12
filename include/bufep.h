@@ -21,15 +21,41 @@
 #ifdef BUFEP_MS_WINDOWS
 #pragma pack(push, 1)
 #endif
+
+#if defined(__BYTE_ORDER) && __BYTE_ORDER == __BIG_ENDIAN || \
+    defined(__BIG_ENDIAN__) || \
+    defined(__ARMEB__) || \
+    defined(__THUMBEB__) || \
+    defined(__AARCH64EB__) || \
+    defined(_MIBSEB) || defined(__MIBSEB) || defined(__MIBSEB__)
+#define BUFEP_SYSTEM_IS_BIG_ENDIAN
+#elif defined(__BYTE_ORDER) && __BYTE_ORDER == __LITTLE_ENDIAN || \
+    defined(__LITTLE_ENDIAN__) || \
+    defined(__ARMEL__) || \
+    defined(__THUMBEL__) || \
+    defined(__AARCH64EL__) || \
+    defined(_MIPSEL) || defined(__MIPSEL) || defined(__MIPSEL__)
+#define BUFEP_SYSTEM_IS_LITTLE_ENDIAN
+#else
+#error "Couldn't decide the system endianness."
+#endif
+
 typedef struct {
     uint32_t magic_header: 24,
-            protocol_version: 8;
+             protocol_version: 8;
 
     bufep_uuid_t client_identifier;
 
-    uint8_t rr_type: 1,
+#ifdef BUFEP_SYSTEM_IS_BIG_ENDIAN
+    uint8_t rr_code:  6,
             rr_error: 1,
-            rr_code: 6;
+            rr_type:  1;
+#else
+    uint8_t rr_code:  6,
+            rr_error: 1,
+            rr_type:  1;
+#endif
+
     uint16_t data_size; /* NOTE: the size EXCLUDING header. */
     bufep_fletcher_checksum_t fletcher_32;
 
