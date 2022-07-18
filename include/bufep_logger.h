@@ -24,10 +24,12 @@ do {                                  \
     printf(fmt, ##__VA_ARGS__);       \
 } while (0)
 
-#define BUFEP_ERROR(fmt, ...) \
-    BUFEP_LOGGER_PRINTF("%s" fmt "%s", STR_RED, ##__VA_ARGS__, STR_RST)
+#define BUFEP_INFO(fmt, ...) \
+    BUFEP_LOGGER_PRINTF(##__VA_ARGS__)
 #define BUFEP_WARN(fmt, ...) \
     BUFEP_LOGGER_PRINTF("%s" fmt "%s", STR_YEL, ##__VA_ARGS__, STR_RST)
+#define BUFEP_ERROR(fmt, ...) \
+    BUFEP_LOGGER_PRINTF("%s" fmt "%s", STR_RED, ##__VA_ARGS__, STR_RST)
 
 void bufep_logger_init_console(void);
 

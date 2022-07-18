@@ -11,7 +11,8 @@ enum bufep_debug_colors {
     BLU,
     MAG,
     CYN,
-    WHT
+    WHT,
+    NAN
 };
 
 #define BUFEP_DEBUG_COLOR(ENUM) \
