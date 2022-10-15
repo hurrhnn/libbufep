@@ -33,6 +33,7 @@ Temporary Items
 build/
 out/
 .idea
+.scannerwork
 .vs
 
 # CMake generated configure file
