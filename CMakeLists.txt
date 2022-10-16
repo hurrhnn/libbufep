@@ -21,9 +21,8 @@ if (LINUX)
 endif ()
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
-    if (CMAKE_COMPILER_IS_GNUCC OR
-            CMAKE_COMPILER_IS_GNUCXX OR
-            CMAKE_COMPILER_IS_CLANG)
+	if (CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)" OR
+            CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
         include(CodeCoverage)
         APPEND_COVERAGE_COMPILER_FLAGS()
         setup_target_for_coverage_gcovr_sonarqube(NAME coverage EXECUTABLE ctest -j2 --output-on-failure --force-new-ctest-process --progress)
@@ -39,9 +38,9 @@ if (MSVC)
     target_link_libraries(bufep wsock32 ws2_32 rpcrt4)
 elseif (LINUX)
     target_link_libraries(bufep ${LibUUID_LIBRARIES})
-    if (CMAKE_BUILD_TYPE MATCHES Debug AND (CMAKE_COMPILER_IS_GNUCC OR
-            CMAKE_COMPILER_IS_GNUCXX OR
-            CMAKE_COMPILER_IS_CLANG))
+    if (CMAKE_BUILD_TYPE MATCHES Debug AND
+           (CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)" OR
+            CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)"))
         target_link_libraries(bufep gcov)
     endif ()
 endif ()
