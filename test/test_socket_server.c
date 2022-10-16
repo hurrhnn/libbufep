@@ -5,16 +5,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
+#include <unistd.h>
+
+void signal_handler() {
+    exit(BUFEP_SUCCESS);
+}
 
 int main(int argc, char **argv) {
+    uint16_t port;
+
     if (argc < 2) {
         printf("Usage: %s [Port]\n", argv[0]);
-        return EXIT_SUCCESS;
-    }
-
-    if (strtol(argv[1], NULL, 10) == EINVAL) {
-        perror("Invalid Port number");
-        return EXIT_FAILURE;
+        printf("Test suite arguments are missing! defaulting to [38450].\n");
+        port = 38450;
+    } else {
+        if ((port = (strtol(argv[1], NULL, 10))) == EINVAL) {
+            perror("Invalid Port number");
+            return EXIT_FAILURE;
+        }
     }
 
     int sock_fd;
@@ -22,17 +31,19 @@ int main(int argc, char **argv) {
     struct sockaddr_in server_addr, client_addr;
     memset(&client_addr, 0, sizeof(client_addr));
 
-    if ((sock_fd = bufep_socket_init_server(htons(
+    if ((sock_fd = bufep_socket_init_server(
 #ifdef BUFEP_MS_WINDOWS
     (u_short)
 #endif
-        strtol(argv[1], NULL, 10)), &server_addr)) < 0) {
+        htons(port), &server_addr)) < 0) {
         perror("socket creation failed");
         return EXIT_FAILURE;
     }
 
-    printf("[*] Listening on 0.0.0.0:%ld...\n", strtol(argv[1], NULL, 10));
+    signal(SIGALRM, signal_handler);
+    printf("[*] Listening on 0.0.0.0:%hu...\n", port);
     while (1) {
+        alarm(5);
         socklen_t socklen = sizeof(client_addr);
         ssize_t n;
 

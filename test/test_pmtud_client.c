@@ -3,21 +3,23 @@
 #include <bufep.h>
 
 int main(int argc, char **argv) {
+    char *address;
+    uint16_t port;
+
     if(argc < 3)
     {
         printf("Usage: %s [Address] [Port]\n", argv[0]);
-        return EXIT_SUCCESS;
+        printf("Test suite arguments are missing! defaults to [127.0.0.1] [38450].\n");
+        address = "127.0.0.1";
+        port = 38450;
+    } else {
+        address = argv[1];
+        if((port = strtol(argv[2], NULL, 10)) == EINVAL)
+        {
+            perror("Invalid Port number");
+            return EXIT_FAILURE;
+        }
     }
-
-    if(strtol(argv[2], NULL, 10) == EINVAL)
-    {
-        perror("Invalid Port number");
-        return EXIT_FAILURE;
-    }
-
-    bufep_hello();
-    char *address = argv[1];
-    uint16_t port = (uint16_t) strtol(argv[2], NULL, 10);
 
     bufep_socket_info_t server_info;
     struct sockaddr_in server_addr;
