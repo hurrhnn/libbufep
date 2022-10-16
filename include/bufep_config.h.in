@@ -34,5 +34,6 @@ typedef SSIZE_T ssize_t;
 #endif
 
 #cmakedefine01 BUFEP_ENABLE_DEBUG
+#cmakedefine01 BUFEP_TEST_ALERM
 
 #endif //LIBBUFEP_BUFEP_CONFIG_H
