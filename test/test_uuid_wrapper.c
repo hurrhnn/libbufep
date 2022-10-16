@@ -9,7 +9,7 @@ int main() {
     is_uuid_null = bufep_uuid_is_null(test_uuid);
     printf("UUID Created: %s", is_uuid_null ? "False - FAIL\n" : "True - PASS\n");
     if(is_uuid_null)
-        return EXIT_FAILURE;
+        return -BUFEP_FAILURE;
 
     bufep_uuid_unparse_lower(test_uuid, test_uuid_str);
     printf("\nUUID: %s\n", test_uuid_str);
@@ -22,7 +22,7 @@ int main() {
         printf("\nUUID Copy & Compare: PASS\n");
     else {
         printf("\nUUID Copy & Compare: FAIL\n");
-        return EXIT_FAILURE;
+        return -BUFEP_FAILURE;
     }
 
     bufep_uuid_parse(test_uuid_str, copied_test_uuid);
@@ -30,7 +30,7 @@ int main() {
         printf("UUID Parse: PASS\n");
     else {
         printf("UUID Parse: FAIL\n");
-        return EXIT_FAILURE;
+        return -BUFEP_FAILURE;
     }
 
     bufep_uuid_clear(test_uuid);
@@ -38,8 +38,6 @@ int main() {
         printf("UUID Clear: PASS\n");
     else {
         printf("UUID Clear: FAIL\n");
-        return EXIT_FAILURE;
+        return -BUFEP_FAILURE;
     }
-
-    printf("\n== ALL of UUID TEST VECTORS ARE SUCCESSFULLY PASSED ==");
 }

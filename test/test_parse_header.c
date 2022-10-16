@@ -13,10 +13,10 @@ int main() {
     }
 
     int status;
-    unsigned char example_packet[] = "\x11\x03\x70\x00\x56\x9b\x5e\x65\xd2\x01\xed\x11\x89\x67\x00\xe0\x4c\x68\x07\x0e\x45\x06\x00\xe7\x28\x29\x65\x7a\x6f\x74\x67\x61\x79";
+    unsigned char example_packet[] = "\x11\x03\x70\x00\x16\x74\x1d\x92\x75\x4d\xed\x11\xba\xb6\xfa\x0c\x52\xdf\x35\xcf\x45\x09\x00\xce\x03\x5d\x00\x6d\x61\x72\x73\x68\x6d\x61\x72\x79";
     bufep_header_t header;
 
-    status = bufep_parse_header((unsigned char *) example_packet, 33, &header);
+    status = bufep_parse_header((unsigned char *) example_packet, sizeof(example_packet), &header);
     if (status == BUFEP_FAILURE)
         return EXIT_FAILURE;
 
