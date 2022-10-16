@@ -94,7 +94,7 @@ void bufep_uuid_unparse_upper(const bufep_uuid_t uuid, bufep_uuid_string_t str_u
     RpcStringFreeA(&uuid_string_t);
 }
 
-#elif defined(_UUID_H) || defined(_UUID_UUID_H)
+#elif defined(HAVE_UUID_H) || defined(HAVE_UUID_UUID_H) || defined(_UL_LIBUUID_UUID_H)
 void bufep_uuid_generate(bufep_uuid_t uuid) {
     uuid_generate_time(uuid);
 }
