@@ -5,12 +5,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#if defined(BUFEP_TEST_ALERM) && !defined(BUFEP_MS_WINDOWS)
 #include <signal.h>
 #include <unistd.h>
 
 void signal_handler() {
     exit(BUFEP_SUCCESS);
 }
+#endif
 
 int main(int argc, char **argv) {
     uint16_t port;
@@ -20,7 +23,7 @@ int main(int argc, char **argv) {
         printf("Test suite arguments are missing! defaulting to [38450].\n");
         port = 38450;
     } else {
-        if ((port = (strtol(argv[1], NULL, 10))) == EINVAL) {
+        if ((port = (uint16_t)(strtol(argv[1], NULL, 10))) == EINVAL) {
             perror("Invalid Port number");
             return EXIT_FAILURE;
         }
@@ -40,10 +43,14 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
+#if defined(BUFEP_TEST_ALERM) && !defined(BUFEP_MS_WINDOWS)
     signal(SIGALRM, signal_handler);
+#endif
     printf("[*] Listening on 0.0.0.0:%hu...\n", port);
     while (1) {
+#if defined(BUFEP_TEST_ALERM) && !defined(BUFEP_MS_WINDOWS)
         alarm(5);
+#endif
         socklen_t socklen = sizeof(client_addr);
         ssize_t n;
 

@@ -8,7 +8,7 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 option(BUFEP_INSTALL_PKGCONFIG "install pkg-config module." ON)
 option(BUFEP_ENABLE_DEBUG "enable bufep debug functions." OFF)
-option(BUFEP_TEST_ALERM "enable the bufep test suite time limit alarm." ON)
+option(BUFEP_TEST_ALERM "enable the bufep test suite time limit alarm." OFF)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(LINUX ON)

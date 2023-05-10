@@ -8,7 +8,7 @@ node("Linux") {
     sh "unzip -o build-wrapper-linux-x86.zip -d .sonar"
   }
   stage('Build') {
-    sh "cmake -DCMAKE_BUILD_TYPE=Debug -B build/ ."
+    sh "cmake -DCMAKE_BUILD_TYPE=Debug -DBUFEP_TEST_ALERM=ON -B build/ ."
     sh ".sonar/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir build make -C build/ clean all"
   }
   stage('Test and Coverage') {
